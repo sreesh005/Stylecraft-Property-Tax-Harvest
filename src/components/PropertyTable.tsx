@@ -4,12 +4,12 @@ import { PropertyTaxRecord, PropertyStage } from "../propertyTypes";
 
 interface PropertyTableProps {
   properties: PropertyTaxRecord[];
-  stageFilter: PropertyStage;
+  stageFilter?: PropertyStage;
   onSelectProperty: (property: PropertyTaxRecord) => void;
   onBulkProtest?: (ids: string[]) => void;
 }
 
-type SortField = "property_id" | "owner_name" | "county" | "street_address" | "prior_appraised_value" | "current_appraised_value" | "protest_deadline" | "tax_amount_due" | "status";
+type SortField = "property_id" | "owner_name" | "county" | "street_address" | "prior_appraised_value" | "current_appraised_value" | "status";
 type SortOrder = "asc" | "desc";
 
 export function PropertyTable({ properties, stageFilter, onSelectProperty, onBulkProtest }: PropertyTableProps) {
@@ -29,7 +29,7 @@ export function PropertyTable({ properties, stageFilter, onSelectProperty, onBul
   // Unique lists for dropdown filters
   const counties = Array.from(new Set(properties.map(p => p.county))).sort();
   const owners = Array.from(new Set(properties.map(p => p.owner_name))).sort();
-  const statuses = Array.from(new Set(properties.filter(p => p.stage === stageFilter).map(p => p.status))).sort();
+  const statuses = Array.from(new Set(properties.map(p => p.status))).sort();
 
   // Handle Sort
   const handleSort = (field: SortField) => {
@@ -44,9 +44,6 @@ export function PropertyTable({ properties, stageFilter, onSelectProperty, onBul
 
   // Filter properties
   const filteredProperties = properties.filter((prop) => {
-    // 1. Stage filter
-    if (prop.stage !== stageFilter) return false;
-
     // 2. Text Search
     const searchLower = searchQuery.toLowerCase();
     const matchesSearch = 
@@ -94,7 +91,7 @@ export function PropertyTable({ properties, stageFilter, onSelectProperty, onBul
     if (e.target.checked) {
       // Select only eligible for protests (status is Notice Issued)
       const eligible = paginatedProperties
-        .filter(p => p.stage === "protest" && p.status === "Appraisal Notice Issued")
+        .filter(p => p.status === "Appraisal Notice Issued")
         .map(p => p.id);
       setSelectedIds(eligible);
     } else {
@@ -176,18 +173,14 @@ export function PropertyTable({ properties, stageFilter, onSelectProperty, onBul
         <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-xs bg-white p-3 rounded-xl border border-slate-200">
           <div>
             <span className="font-bold text-slate-800 uppercase tracking-wider block">
-              {stageFilter === "rendering" && "Inventory Rendering (Stage 1)"}
-              {stageFilter === "protest" && "Proposed Appraisal & Protest (Stage 2)"}
-              {stageFilter === "payment" && "Assessed Statement & Payment (Stage 3)"}
+              Stylecraft Active Property Tax Portfolio
             </span>
             <span className="text-[11px] text-slate-500 font-medium">
-              {stageFilter === "rendering" && "Rendering details based on prior-year appraised/assessed values (Deadline: April 15)."}
-              {stageFilter === "protest" && "Review 2026 Appraisal notices, monitor deadlines, and track active/resolved protests."}
-              {stageFilter === "payment" && "Tax statements with amount dues and current payment statuses (October release)."}
+              Monitor prior year valuations, current year appraisals, tax rates, projected tax liabilities, and pending protests.
             </span>
           </div>
 
-          {stageFilter === "protest" && selectedIds.length > 0 && (
+          {selectedIds.length > 0 && (
             <div className="flex items-center gap-2">
               <span className="text-[11px] font-bold text-indigo-600 font-mono bg-indigo-50 px-2 py-1 rounded">
                 {selectedIds.length} properties selected
@@ -210,15 +203,13 @@ export function PropertyTable({ properties, stageFilter, onSelectProperty, onBul
         <table className="w-full text-left border-collapse text-xs">
           <thead>
             <tr className="bg-slate-50 border-b border-slate-200 text-slate-500 font-bold uppercase tracking-wider select-none text-[10px]">
-              {stageFilter === "protest" && (
-                <th className="p-4 w-10 text-center">
-                  <input 
-                    type="checkbox" 
-                    onChange={handleSelectAll}
-                    className="rounded text-indigo-600 focus:ring-indigo-500" 
-                  />
-                </th>
-              )}
+              <th className="p-4 w-10 text-center">
+                <input 
+                  type="checkbox" 
+                  onChange={handleSelectAll}
+                  className="rounded text-indigo-600 focus:ring-indigo-500" 
+                />
+              </th>
               <th className="p-4 cursor-pointer hover:bg-slate-100" onClick={() => handleSort("property_id")}>
                 <div className="flex items-center gap-1">Property ID {renderSortIndicator("property_id")}</div>
               </th>
@@ -231,42 +222,14 @@ export function PropertyTable({ properties, stageFilter, onSelectProperty, onBul
               <th className="p-4 cursor-pointer hover:bg-slate-100" onClick={() => handleSort("street_address")}>
                 <div className="flex items-center gap-1">Street Address {renderSortIndicator("street_address")}</div>
               </th>
-
-              {/* Rendering Stage Columns */}
-              {stageFilter === "rendering" && (
-                <>
-                  <th className="p-4 cursor-pointer text-right hover:bg-slate-100" onClick={() => handleSort("prior_appraised_value")}>
-                    <div className="flex items-center justify-end gap-1">Prior Appraised (2025) {renderSortIndicator("prior_appraised_value")}</div>
-                  </th>
-                  <th className="p-4 text-right">Prior Assessed (2025)</th>
-                </>
-              )}
-
-              {/* Protest Stage Columns */}
-              {stageFilter === "protest" && (
-                <>
-                  <th className="p-4">Notice Date</th>
-                  <th className="p-4 cursor-pointer hover:bg-slate-100" onClick={() => handleSort("protest_deadline")}>
-                    <div className="flex items-center gap-1">Protest Deadline {renderSortIndicator("protest_deadline")}</div>
-                  </th>
-                  <th className="p-4 cursor-pointer text-right hover:bg-slate-100" onClick={() => handleSort("current_appraised_value")}>
-                    <div className="flex items-center justify-end gap-1">2026 Appraised {renderSortIndicator("current_appraised_value")}</div>
-                  </th>
-                  <th className="p-4 text-right">2026 Assessed</th>
-                </>
-              )}
-
-              {/* Payment Stage Columns */}
-              {stageFilter === "payment" && (
-                <>
-                  <th className="p-4 text-right">2026 Assessed</th>
-                  <th className="p-4 cursor-pointer text-right hover:bg-slate-100" onClick={() => handleSort("tax_amount_due")}>
-                    <div className="flex items-center justify-end gap-1">Tax Due {renderSortIndicator("tax_amount_due")}</div>
-                  </th>
-                  <th className="p-4">Payment Status</th>
-                </>
-              )}
-
+              <th className="p-4 cursor-pointer text-right hover:bg-slate-100" onClick={() => handleSort("prior_appraised_value")}>
+                <div className="flex items-center justify-end gap-1">2025 Prior Val {renderSortIndicator("prior_appraised_value")}</div>
+              </th>
+              <th className="p-4 cursor-pointer text-right hover:bg-slate-100" onClick={() => handleSort("current_appraised_value")}>
+                <div className="flex items-center justify-end gap-1">2026 Appraised {renderSortIndicator("current_appraised_value")}</div>
+              </th>
+              <th className="p-4 text-right">Tax Rate</th>
+              <th className="p-4 text-right">Projected Tax</th>
               <th className="p-4 cursor-pointer hover:bg-slate-100" onClick={() => handleSort("status")}>
                 <div className="flex items-center gap-1">Status {renderSortIndicator("status")}</div>
               </th>
@@ -276,14 +239,18 @@ export function PropertyTable({ properties, stageFilter, onSelectProperty, onBul
           <tbody className="divide-y divide-slate-100">
             {paginatedProperties.length === 0 ? (
               <tr>
-                <td colSpan={10} className="p-8 text-center text-slate-400 font-medium font-mono">
+                <td colSpan={11} className="p-8 text-center text-slate-400 font-medium font-mono">
                   No properties matched search or filter bounds.
                 </td>
               </tr>
             ) : (
               paginatedProperties.map((prop) => {
                 const isSelected = selectedIds.includes(prop.id);
-                const canProtest = stageFilter === "protest" && prop.status === "Appraisal Notice Issued";
+                const canProtest = prop.status === "Appraisal Notice Issued";
+                const taxRate = prop.tax_rate ?? 2.0;
+                const projectedTax = prop.current_appraised_value 
+                  ? Math.round((prop.current_appraised_value * taxRate) / 100) 
+                  : Math.round((prop.prior_appraised_value * taxRate) / 100);
 
                 return (
                   <tr 
@@ -291,69 +258,25 @@ export function PropertyTable({ properties, stageFilter, onSelectProperty, onBul
                     className="hover:bg-slate-50/50 cursor-pointer transition font-semibold text-slate-700"
                     onClick={() => onSelectProperty(prop)}
                   >
-                    {stageFilter === "protest" && (
-                      <td className="p-4 text-center" onClick={(e) => e.stopPropagation()}>
-                        <input 
-                          type="checkbox" 
-                          disabled={!canProtest}
-                          checked={isSelected}
-                          onChange={(e) => handleSelectOne(prop.id, e.target.checked)}
-                          className="rounded text-indigo-600 focus:ring-indigo-500 disabled:opacity-30 disabled:cursor-not-allowed" 
-                        />
-                      </td>
-                    )}
+                    <td className="p-4 text-center" onClick={(e) => e.stopPropagation()}>
+                      <input 
+                        type="checkbox" 
+                        disabled={!canProtest}
+                        checked={isSelected}
+                        onChange={(e) => handleSelectOne(prop.id, e.target.checked)}
+                        className="rounded text-indigo-600 focus:ring-indigo-500 disabled:opacity-30 disabled:cursor-not-allowed" 
+                      />
+                    </td>
                     <td className="p-4 font-mono text-[11px] text-indigo-600">{prop.property_id}</td>
                     <td className="p-4 truncate max-w-[150px]" title={prop.owner_name}>{prop.owner_name}</td>
                     <td className="p-4 text-slate-500 font-bold">{prop.county}</td>
                     <td className="p-4 truncate max-w-[180px]">{prop.street_address}</td>
-
-                    {/* Rendering values */}
-                    {stageFilter === "rendering" && (
-                      <>
-                        <td className="p-4 text-right text-slate-600">${prop.prior_appraised_value.toLocaleString()}</td>
-                        <td className="p-4 text-right text-slate-600">${prop.prior_assessed_value.toLocaleString()}</td>
-                      </>
-                    )}
-
-                    {/* Protest values */}
-                    {stageFilter === "protest" && (
-                      <>
-                        <td className="p-4 text-slate-500 font-mono">{prop.notice_date || "—"}</td>
-                        <td className={`p-4 font-mono font-bold ${canProtest ? "text-amber-600" : "text-slate-400"}`}>
-                          {prop.protest_deadline || "—"}
-                        </td>
-                        <td className="p-4 text-right text-slate-900 font-bold">
-                          {prop.current_appraised_value ? `$${prop.current_appraised_value.toLocaleString()}` : <span className="text-slate-400 font-normal italic">Pending</span>}
-                        </td>
-                        <td className="p-4 text-right text-slate-900 font-extrabold">
-                          {prop.current_assessed_value ? `$${prop.current_assessed_value.toLocaleString()}` : <span className="text-slate-400 font-normal italic">Pending</span>}
-                        </td>
-                      </>
-                    )}
-
-                    {/* Payment values */}
-                    {stageFilter === "payment" && (
-                      <>
-                        <td className="p-4 text-right text-slate-900 font-bold">
-                          {prop.current_assessed_value ? `$${prop.current_assessed_value.toLocaleString()}` : "—"}
-                        </td>
-                        <td className="p-4 text-right text-slate-900 font-extrabold bg-slate-50/30">
-                          {prop.tax_amount_due ? `$${prop.tax_amount_due.toLocaleString()}` : <span className="text-slate-400 font-normal italic">TBD</span>}
-                        </td>
-                        <td className="p-4">
-                          <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${
-                            prop.payment_status === "paid"
-                              ? "bg-emerald-100 text-emerald-800"
-                              : prop.payment_status === "overdue"
-                              ? "bg-red-100 text-red-800 animate-pulse"
-                              : "bg-amber-100 text-amber-800"
-                          }`}>
-                            {prop.payment_status || "Unreleased"}
-                          </span>
-                        </td>
-                      </>
-                    )}
-
+                    <td className="p-4 text-right text-slate-600">${prop.prior_appraised_value.toLocaleString()}</td>
+                    <td className="p-4 text-right text-slate-900 font-bold">
+                      {prop.current_appraised_value ? `$${prop.current_appraised_value.toLocaleString()}` : <span className="text-slate-400 font-normal italic">—</span>}
+                    </td>
+                    <td className="p-4 text-right text-slate-500">{taxRate}%</td>
+                    <td className="p-4 text-right text-slate-900 font-bold">${projectedTax.toLocaleString()}</td>
                     <td className="p-4">
                       <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-[10px] font-bold tracking-wide uppercase ${
                         prop.status.includes("Paid") || prop.status.includes("Resolved")
@@ -372,11 +295,7 @@ export function PropertyTable({ properties, stageFilter, onSelectProperty, onBul
                         className="p-1.5 hover:bg-slate-100 text-indigo-600 hover:text-indigo-900 rounded-lg transition"
                         title="Review details"
                       >
-                        {stageFilter === "protest" && prop.current_appraised_value ? (
-                          <FileText className="h-4 w-4" />
-                        ) : (
-                          <Eye className="h-4 w-4" />
-                        )}
+                        <Eye className="h-4 w-4" />
                       </button>
                     </td>
                   </tr>

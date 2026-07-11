@@ -525,14 +525,6 @@ with col_f3:
         options=["All Counties"] + all_counties_list
     )
 
-# Apply Stage Filters using beautiful Tabs
-tab_all, tab_render, tab_protest, tab_pay = st.tabs([
-    "All Inventory Stages", 
-    "1. Rendering Phase", 
-    "2. Protest Phase", 
-    "3. Payment Phase"
-])
-
 # Filter dataframe logic
 filtered_props = list(properties)
 
@@ -554,18 +546,6 @@ if search_query:
         q in p.get("geo_id", "").lower() or 
         q in p.get("legal_description", "").lower()
     ]
-
-# Split filtered properties based on Stage Tabs
-tab_index = 0
-active_tab = "all"
-if tab_all:
-    pass
-# Determine active tab based on Streamlit's selection
-# We can filter list within each rendering tab block
-tab_all_props = filtered_props
-tab_render_props = [p for p in filtered_props if p.get("stage") == "rendering"]
-tab_protest_props = [p for p in filtered_props if p.get("stage") == "protest"]
-tab_pay_props = [p for p in filtered_props if p.get("stage") == "payment"]
 
 # Render properties grid/list using 2 columns (70% Table, 30% Inspector)
 col_left_table, col_right_inspector = st.columns([0.65, 0.35])
@@ -859,90 +839,79 @@ with col_right_inspector:
 # Left Column: Property Table Filtered by Selected Tab
 # ---------------------------------------------------------
 with col_left_table:
-    # Use selected tab's filtered dataframe
-    active_props = []
-    
-    # Active tab identification
-    with tab_all:
-        active_props = tab_all_props
+    # Function to render a property table for any active properties list
+    def render_property_table(active_props: list[dict]):
+        # Render table header details
+        st.markdown(f'<p style="font-size: 11px; font-weight:700; color: #475569; margin-bottom: 8px;">SHOWING <b>{len(active_props)}</b> PROPERTIES IN THIS INVENTORY PHASE</p>', unsafe_allow_html=True)
         
-    with tab_render:
-        active_props = tab_render_props
-        
-    with tab_protest:
-        active_props = tab_protest_props
-        
-    with tab_pay:
-        active_props = tab_pay_props
-        
-    # Render table header details
-    st.markdown(f'<p style="font-size: 11px; font-weight:700; color: #475569; margin-bottom: 8px;">SHOWING <b>{len(active_props)}</b> PROPERTIES IN THIS INVENTORY PHASE</p>', unsafe_allow_html=True)
-    
-    # Build a clean custom pandas frame for high speed, beautiful table display
-    if active_props:
-        df_display = []
-        for p in active_props:
-            prior_v = p.get("prior_appraised_value")
-            curr_v = p.get("current_appraised_value")
-            proposed_tax_est = 0
-            
-            rate = p.get("tax_rate", 2.0)
-            if curr_v:
-                proposed_tax_est = (curr_v * rate) / 100.0
+        # Build a clean custom pandas frame for high speed, beautiful table display
+        if active_props:
+            df_display = []
+            for p in active_props:
+                prior_v = p.get("prior_appraised_value")
+                curr_v = p.get("current_appraised_value")
+                proposed_tax_est = 0
                 
-            df_display.append({
-                "ID": p.get("property_id"),
-                "Address": p.get("street_address"),
-                "County": p.get("county"),
-                "Prior Assessed (2025)": f"${prior_v:,}" if prior_v else "—",
-                "Proposed Valuation (2026)": f"${curr_v:,}" if curr_v else "—",
-                "Tax Rate": f"{rate}%",
-                "Projected Taxes": f"${int(proposed_tax_est):,}" if proposed_tax_est else "—",
-                "Status": p.get("status")
-            })
+                rate = p.get("tax_rate", 2.0)
+                if curr_v:
+                    proposed_tax_est = (curr_v * rate) / 100.0
+                    
+                df_display.append({
+                    "ID": p.get("property_id"),
+                    "Address": p.get("street_address"),
+                    "County": p.get("county"),
+                    "Prior Assessed (2025)": f"${prior_v:,}" if prior_v else "—",
+                    "Proposed Valuation (2026)": f"${curr_v:,}" if curr_v else "—",
+                    "Tax Rate": f"{rate}%",
+                    "Projected Taxes": f"${int(proposed_tax_est):,}" if proposed_tax_est else "—",
+                    "Status": p.get("status")
+                })
+                
+            pdf = pd.DataFrame(df_display)
             
-        pdf = pd.DataFrame(df_display)
-        
-        # Render beautiful styled HTML data table with custom badges
-        table_html = """
-        <table style="width: 100%; border-collapse: collapse; font-size: 11px; text-align: left; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden;">
-            <thead>
-                <tr style="background-color: #f8fafc; border-bottom: 1px solid #e2e8f0; height: 38px;">
-                    <th style="padding-left: 12px; font-weight:700; color: #475569; width: 10%;">ID</th>
-                    <th style="padding-left: 10px; font-weight:700; color: #475569; width: 30%;">Situs Address</th>
-                    <th style="padding-left: 10px; font-weight:700; color: #475569; width: 12%;">County</th>
-                    <th style="padding-left: 10px; font-weight:700; color: #475569; width: 14%;">2025 Prior Val</th>
-                    <th style="padding-left: 10px; font-weight:700; color: #475569; width: 14%;">2026 Appraised</th>
-                    <th style="padding-left: 10px; font-weight:700; color: #475569; width: 10%;">Tax Rate</th>
-                    <th style="padding-left: 10px; font-weight:700; color: #475569; width: 10%;">Projected Tax</th>
-                    <th style="padding-left: 10px; font-weight:700; color: #475569; width: 14%;">Status</th>
-                </tr>
-            </thead>
-            <tbody>
-        """
-        
-        for idx, row in pdf.iterrows():
-            bg_color = "#ffffff" if idx % 2 == 0 else "#f8fafc"
-            badge_str = get_status_badge_html(row["Status"])
-            
-            table_html += f"""
-                <tr style="background-color: {bg_color}; border-bottom: 1px solid #f1f5f9; height: 34px;">
-                    <td style="padding-left: 12px; font-family: 'JetBrains Mono', monospace; font-weight:600; color: #4f46e5;">{row["ID"]}</td>
-                    <td style="padding-left: 10px; font-weight:700; color: #0f172a;">{row["Address"]}</td>
-                    <td style="padding-left: 10px; font-weight:600; color: #475569;">{row["County"]}</td>
-                    <td style="padding-left: 10px; font-weight:500; color: #334155;">{row["Prior Assessed (2025)"]}</td>
-                    <td style="padding-left: 10px; font-weight:700; color: #ea580c;">{row["Proposed Valuation (2026)"]}</td>
-                    <td style="padding-left: 10px; font-weight:500; color: #475569;">{row["Tax Rate"]}</td>
-                    <td style="padding-left: 10px; font-weight:700; color: #0f172a;">{row["Projected Taxes"]}</td>
-                    <td style="padding-left: 10px;">{badge_str}</td>
-                </tr>
+            # Render beautiful styled HTML data table with custom badges
+            table_html = """
+            <table style="width: 100%; border-collapse: collapse; font-size: 11px; text-align: left; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden;">
+                <thead>
+                    <tr style="background-color: #f8fafc; border-bottom: 1px solid #e2e8f0; height: 38px;">
+                        <th style="padding-left: 12px; font-weight:700; color: #475569; width: 10%;">ID</th>
+                        <th style="padding-left: 10px; font-weight:700; color: #475569; width: 30%;">Situs Address</th>
+                        <th style="padding-left: 10px; font-weight:700; color: #475569; width: 12%;">County</th>
+                        <th style="padding-left: 10px; font-weight:700; color: #475569; width: 14%;">2025 Prior Val</th>
+                        <th style="padding-left: 10px; font-weight:700; color: #475569; width: 14%;">2026 Appraised</th>
+                        <th style="padding-left: 10px; font-weight:700; color: #475569; width: 10%;">Tax Rate</th>
+                        <th style="padding-left: 10px; font-weight:700; color: #475569; width: 10%;">Projected Tax</th>
+                        <th style="padding-left: 10px; font-weight:700; color: #475569; width: 14%;">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
             """
             
-        table_html += "</tbody></table>"
-        
-        st.markdown(table_html, unsafe_allow_html=True)
-    else:
-        st.write("No property entries match these filters.")
+            for idx, row in pdf.iterrows():
+                bg_color = "#ffffff" if idx % 2 == 0 else "#f8fafc"
+                badge_str = get_status_badge_html(row["Status"])
+                
+                table_html += f"""
+                    <tr style="background-color: {bg_color}; border-bottom: 1px solid #f1f5f9; height: 34px;">
+                        <td style="padding-left: 12px; font-family: 'JetBrains Mono', monospace; font-weight:600; color: #4f46e5;">{row["ID"]}</td>
+                        <td style="padding-left: 10px; font-weight:700; color: #0f172a;">{row["Address"]}</td>
+                        <td style="padding-left: 10px; font-weight:600; color: #475569;">{row["County"]}</td>
+                        <td style="padding-left: 10px; font-weight:500; color: #334155;">{row["Prior Assessed (2025)"]}</td>
+                        <td style="padding-left: 10px; font-weight:700; color: #ea580c;">{row["Proposed Valuation (2026)"]}</td>
+                        <td style="padding-left: 10px; font-weight:500; color: #475569;">{row["Tax Rate"]}</td>
+                        <td style="padding-left: 10px; font-weight:700; color: #0f172a;">{row["Projected Taxes"]}</td>
+                        <td style="padding-left: 10px;">{badge_str}</td>
+                    </tr>
+                """
+                
+            table_html += "</tbody></table>"
+            
+            st.markdown(table_html, unsafe_allow_html=True)
+        else:
+            st.write("No property entries match these filters.")
+            
+    # Render direct property table
+    render_property_table(filtered_props)
 
 # ---------------------------------------------------------
 # Footer Information

@@ -414,50 +414,8 @@ export function PropertyTaxDashboard() {
         </div>
       )}
 
-      {/* Stage Navigation & Main Properties View */}
+      {/* Properties View */}
       <div className="space-y-4">
-        {/* Navigation Bar */}
-        <div className="flex border-b border-slate-200">
-          <button
-            id="btn-nav-rendering"
-            onClick={() => setActiveStage("rendering")}
-            className={`flex items-center gap-2 py-3 px-6 text-xs font-extrabold uppercase tracking-widest border-b-2 transition ${
-              activeStage === "rendering"
-                ? "border-indigo-600 text-indigo-600"
-                : "border-transparent text-slate-500 hover:text-slate-800"
-            }`}
-          >
-            <HardHat className="h-4 w-4" />
-            1. Rendering ({metrics.renderingCount})
-          </button>
-
-          <button
-            id="btn-nav-protest"
-            onClick={() => setActiveStage("protest")}
-            className={`flex items-center gap-2 py-3 px-6 text-xs font-extrabold uppercase tracking-widest border-b-2 transition ${
-              activeStage === "protest"
-                ? "border-amber-500 text-amber-700"
-                : "border-transparent text-slate-500 hover:text-slate-800"
-            }`}
-          >
-            <ShieldCheck className="h-4 w-4" />
-            2. Proposed & Protest ({metrics.protestCount})
-          </button>
-
-          <button
-            id="btn-nav-payment"
-            onClick={() => setActiveStage("payment")}
-            className={`flex items-center gap-2 py-3 px-6 text-xs font-extrabold uppercase tracking-widest border-b-2 transition ${
-              activeStage === "payment"
-                ? "border-emerald-500 text-emerald-700"
-                : "border-transparent text-slate-500 hover:text-slate-800"
-            }`}
-          >
-            <Wallet2 className="h-4 w-4" />
-            3. Statement & Payment ({metrics.paymentCount})
-          </button>
-        </div>
-
         {/* Properties list */}
         {isLoading ? (
           <div className="p-12 text-center text-slate-400 font-mono font-bold animate-pulse">
@@ -466,7 +424,6 @@ export function PropertyTaxDashboard() {
         ) : (
           <PropertyTable 
             properties={properties}
-            stageFilter={activeStage}
             onSelectProperty={handleSelectProperty}
             onBulkProtest={handleBulkProtest}
           />
