@@ -870,8 +870,7 @@ with col_left_table:
             pdf = pd.DataFrame(df_display)
             
             # Render beautiful styled HTML data table with custom badges
-            table_html = """
-            <table style="width: 100%; border-collapse: collapse; font-size: 11px; text-align: left; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden;">
+            table_html = """<table style="width: 100%; border-collapse: collapse; font-size: 11px; text-align: left; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden;">
                 <thead>
                     <tr style="background-color: #f8fafc; border-bottom: 1px solid #e2e8f0; height: 38px;">
                         <th style="padding-left: 12px; font-weight:700; color: #475569; width: 10%;">ID</th>
@@ -884,25 +883,22 @@ with col_left_table:
                         <th style="padding-left: 10px; font-weight:700; color: #475569; width: 14%;">Status</th>
                     </tr>
                 </thead>
-                <tbody>
-            """
+                <tbody>"""
             
             for idx, row in pdf.iterrows():
                 bg_color = "#ffffff" if idx % 2 == 0 else "#f8fafc"
                 badge_str = get_status_badge_html(row["Status"])
                 
-                table_html += f"""
-                    <tr style="background-color: {bg_color}; border-bottom: 1px solid #f1f5f9; height: 34px;">
-                        <td style="padding-left: 12px; font-family: 'JetBrains Mono', monospace; font-weight:600; color: #4f46e5;">{row["ID"]}</td>
-                        <td style="padding-left: 10px; font-weight:700; color: #0f172a;">{row["Address"]}</td>
-                        <td style="padding-left: 10px; font-weight:600; color: #475569;">{row["County"]}</td>
-                        <td style="padding-left: 10px; font-weight:500; color: #334155;">{row["Prior Assessed (2025)"]}</td>
-                        <td style="padding-left: 10px; font-weight:700; color: #ea580c;">{row["Proposed Valuation (2026)"]}</td>
-                        <td style="padding-left: 10px; font-weight:500; color: #475569;">{row["Tax Rate"]}</td>
-                        <td style="padding-left: 10px; font-weight:700; color: #0f172a;">{row["Projected Taxes"]}</td>
-                        <td style="padding-left: 10px;">{badge_str}</td>
-                    </tr>
-                """
+                table_html += f"""<tr style="background-color: {bg_color}; border-bottom: 1px solid #f1f5f9; height: 34px;">
+                    <td style="padding-left: 12px; font-family: 'JetBrains Mono', monospace; font-weight:600; color: #4f46e5;">{row["ID"]}</td>
+                    <td style="padding-left: 10px; font-weight:700; color: #0f172a;">{row["Address"]}</td>
+                    <td style="padding-left: 10px; font-weight:600; color: #475569;">{row["County"]}</td>
+                    <td style="padding-left: 10px; font-weight:500; color: #334155;">{row["Prior Assessed (2025)"]}</td>
+                    <td style="padding-left: 10px; font-weight:700; color: #ea580c;">{row["Proposed Valuation (2026)"]}</td>
+                    <td style="padding-left: 10px; font-weight:500; color: #475569;">{row["Tax Rate"]}</td>
+                    <td style="padding-left: 10px; font-weight:700; color: #0f172a;">{row["Projected Taxes"]}</td>
+                    <td style="padding-left: 10px;">{badge_str}</td>
+                </tr>"""
                 
             table_html += "</tbody></table>"
             
