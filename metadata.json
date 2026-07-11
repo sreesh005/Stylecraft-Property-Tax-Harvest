@@ -1,0 +1,6 @@
+{
+  "name": "College Station & Dallas Location Intelligence",
+  "description": "An internal property tax harvesting, rendering, protest, and payment tracking dashboard for Stylecraft Builders and Ranier & Son Development properties across Texas Central Appraisal Districts (CADs).",
+  "requestFramePermissions": ["geolocation"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
