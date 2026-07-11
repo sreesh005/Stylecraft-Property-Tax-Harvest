@@ -839,10 +839,32 @@ with col_right_inspector:
 # Left Column: Property Table Filtered by Selected Tab
 # ---------------------------------------------------------
 with col_left_table:
+    # Pagination configuration
+    items_per_page = 10
+    total_items = len(filtered_props)
+    total_pages = max(1, (total_items + items_per_page - 1) // items_per_page)
+    
+    # Track page in session state
+    if "current_page_idx" not in st.session_state:
+        st.session_state.current_page_idx = 1
+        
+    # Clamp current page if filters changed or are out of bounds
+    if st.session_state.current_page_idx > total_pages:
+        st.session_state.current_page_idx = total_pages
+    if st.session_state.current_page_idx < 1:
+        st.session_state.current_page_idx = 1
+        
+    start_idx = (st.session_state.current_page_idx - 1) * items_per_page
+    end_idx = start_idx + items_per_page
+    
+    paginated_props = filtered_props[start_idx:end_idx]
+    start_num = start_idx + 1 if total_items > 0 else 0
+    end_num = min(end_idx, total_items)
+
     # Function to render a property table for any active properties list
-    def render_property_table(active_props: list[dict]):
+    def render_property_table(active_props: list[dict], total_count: int, start_n: int, end_n: int):
         # Render table header details
-        st.markdown(f'<p style="font-size: 11px; font-weight:700; color: #475569; margin-bottom: 8px;">SHOWING <b>{len(active_props)}</b> PROPERTIES IN THIS INVENTORY PHASE</p>', unsafe_allow_html=True)
+        st.markdown(f'<p style="font-size: 11px; font-weight:700; color: #475569; margin-bottom: 8px;">SHOWING <b>{start_n} - {end_n}</b> OF <b>{total_count}</b> PROPERTIES IN THIS PORTFOLIO VIEW</p>', unsafe_allow_html=True)
         
         # Build a clean custom pandas frame for high speed, beautiful table display
         if active_props:
@@ -907,7 +929,26 @@ with col_left_table:
             st.write("No property entries match these filters.")
             
     # Render direct property table
-    render_property_table(filtered_props)
+    render_property_table(paginated_props, total_items, start_num, end_num)
+
+    # Render Pagination Controls Footer (similar to React UI)
+    if total_pages > 1:
+        st.write("")
+        col_pag_info, col_pag_controls = st.columns([0.5, 0.5])
+        with col_pag_info:
+            st.markdown(f'<p style="font-size: 12px; color: #64748b; margin-top: 6px;">Showing <b>{start_num} - {end_num}</b> of <b>{total_items}</b> properties (Page {st.session_state.current_page_idx} of {total_pages})</p>', unsafe_allow_html=True)
+        with col_pag_controls:
+            btn_prev, btn_page_num, btn_next = st.columns([0.3, 0.4, 0.3])
+            with btn_prev:
+                if st.button("⬅️ Prev", disabled=(st.session_state.current_page_idx <= 1), use_container_width=True, key="prev_page_btn"):
+                    st.session_state.current_page_idx -= 1
+                    st.rerun()
+            with btn_page_num:
+                st.markdown(f'<p style="text-align: center; font-family: monospace; font-size: 13px; font-weight: bold; margin-top: 6px; color: #4f46e5;">{st.session_state.current_page_idx} / {total_pages}</p>', unsafe_allow_html=True)
+            with btn_next:
+                if st.button("Next ➡️", disabled=(st.session_state.current_page_idx >= total_pages), use_container_width=True, key="next_page_btn"):
+                    st.session_state.current_page_idx += 1
+                    st.rerun()
 
 # ---------------------------------------------------------
 # Footer Information
