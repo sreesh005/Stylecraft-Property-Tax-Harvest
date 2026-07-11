@@ -238,14 +238,14 @@
     "street_address": "525 HARVEST RIDGE",
     "situs_city": "Bryan",
     "situs_zip": "77802",
-    "stage": "rendering",
-    "status": "Rendering Filed",
+    "stage": "protest",
+    "status": "Appraisal Notice Issued",
     "prior_appraised_value": 63725,
     "prior_assessed_value": 63725,
-    "notice_date": null,
-    "protest_deadline": null,
-    "current_appraised_value": null,
-    "current_assessed_value": null,
+    "notice_date": "2026-07-11",
+    "protest_deadline": "2026-08-10",
+    "current_appraised_value": 258114,
+    "current_assessed_value": 258114,
     "tax_amount_due": null,
     "payment_status": null,
     "acres": 0.123,
@@ -266,6 +266,12 @@
         "event": "CAD Review",
         "description": "County Appraisal District acknowledged rendering receipt. Awaiting mid-year physical appraisal of construction progress.",
         "user": "System"
+      },
+      {
+        "date": "2026-07-11",
+        "event": "Appraisal Notice Harvested",
+        "description": "CAD Portal Scraper successfully parsed 2026 Notice of Appraised Value. Current Year Appraised Value: $258,114. Protest deadline set to 30 days from now.",
+        "user": "CAD Scraper Pipeline"
       }
     ]
   },
@@ -526,14 +532,14 @@
     "street_address": "5783 MEADOW VIEW LANE",
     "situs_city": "Bryan",
     "situs_zip": "77802",
-    "stage": "rendering",
-    "status": "Rendering Filed",
+    "stage": "protest",
+    "status": "Appraisal Notice Issued",
     "prior_appraised_value": 41124,
     "prior_assessed_value": 41124,
-    "notice_date": null,
-    "protest_deadline": null,
-    "current_appraised_value": null,
-    "current_assessed_value": null,
+    "notice_date": "2026-07-11",
+    "protest_deadline": "2026-08-10",
+    "current_appraised_value": 212379,
+    "current_assessed_value": 212379,
     "tax_amount_due": null,
     "payment_status": null,
     "acres": 0.138,
@@ -554,6 +560,12 @@
         "event": "CAD Review",
         "description": "County Appraisal District acknowledged rendering receipt. Awaiting mid-year physical appraisal of construction progress.",
         "user": "System"
+      },
+      {
+        "date": "2026-07-11",
+        "event": "Appraisal Notice Harvested",
+        "description": "CAD Portal Scraper successfully parsed 2026 Notice of Appraised Value. Current Year Appraised Value: $212,379. Protest deadline set to 30 days from now.",
+        "user": "CAD Scraper Pipeline"
       }
     ]
   },
@@ -667,14 +679,14 @@
     "street_address": "5636 WILLOW CREEK",
     "situs_city": "Bryan",
     "situs_zip": "77802",
-    "stage": "rendering",
-    "status": "Rendering Filed",
+    "stage": "protest",
+    "status": "Appraisal Notice Issued",
     "prior_appraised_value": 63248,
     "prior_assessed_value": 63248,
-    "notice_date": null,
-    "protest_deadline": null,
-    "current_appraised_value": null,
-    "current_assessed_value": null,
+    "notice_date": "2026-07-11",
+    "protest_deadline": "2026-08-10",
+    "current_appraised_value": 159486,
+    "current_assessed_value": 159486,
     "tax_amount_due": null,
     "payment_status": null,
     "acres": 0.341,
@@ -695,6 +707,12 @@
         "event": "CAD Review",
         "description": "County Appraisal District acknowledged rendering receipt. Awaiting mid-year physical appraisal of construction progress.",
         "user": "System"
+      },
+      {
+        "date": "2026-07-11",
+        "event": "Appraisal Notice Harvested",
+        "description": "CAD Portal Scraper successfully parsed 2026 Notice of Appraised Value. Current Year Appraised Value: $159,486. Protest deadline set to 30 days from now.",
+        "user": "CAD Scraper Pipeline"
       }
     ]
   },
@@ -1495,14 +1513,14 @@
     "street_address": "7711 WILDWOOD WAY",
     "situs_city": "Bryan",
     "situs_zip": "77802",
-    "stage": "rendering",
-    "status": "Rendering Filed",
+    "stage": "protest",
+    "status": "Appraisal Notice Issued",
     "prior_appraised_value": 44623,
     "prior_assessed_value": 44623,
-    "notice_date": null,
-    "protest_deadline": null,
-    "current_appraised_value": null,
-    "current_assessed_value": null,
+    "notice_date": "2026-07-11",
+    "protest_deadline": "2026-08-10",
+    "current_appraised_value": 201472,
+    "current_assessed_value": 201472,
     "tax_amount_due": null,
     "payment_status": null,
     "acres": 0.333,
@@ -1523,6 +1541,12 @@
         "event": "CAD Review",
         "description": "County Appraisal District acknowledged rendering receipt. Awaiting mid-year physical appraisal of construction progress.",
         "user": "System"
+      },
+      {
+        "date": "2026-07-11",
+        "event": "Appraisal Notice Harvested",
+        "description": "CAD Portal Scraper successfully parsed 2026 Notice of Appraised Value. Current Year Appraised Value: $201,472. Protest deadline set to 30 days from now.",
+        "user": "CAD Scraper Pipeline"
       }
     ]
   },
@@ -2053,14 +2077,14 @@
     "street_address": "2631 AUTUMN OAK TRAIL",
     "situs_city": "Bryan",
     "situs_zip": "77802",
-    "stage": "rendering",
-    "status": "Rendering Filed",
+    "stage": "protest",
+    "status": "Appraisal Notice Issued",
     "prior_appraised_value": 49550,
     "prior_assessed_value": 49550,
-    "notice_date": null,
-    "protest_deadline": null,
-    "current_appraised_value": null,
-    "current_assessed_value": null,
+    "notice_date": "2026-07-11",
+    "protest_deadline": "2026-08-10",
+    "current_appraised_value": 209286,
+    "current_assessed_value": 209286,
     "tax_amount_due": null,
     "payment_status": null,
     "acres": 0.15,
@@ -2081,6 +2105,12 @@
         "event": "CAD Review",
         "description": "County Appraisal District acknowledged rendering receipt. Awaiting mid-year physical appraisal of construction progress.",
         "user": "System"
+      },
+      {
+        "date": "2026-07-11",
+        "event": "Appraisal Notice Harvested",
+        "description": "CAD Portal Scraper successfully parsed 2026 Notice of Appraised Value. Current Year Appraised Value: $209,286. Protest deadline set to 30 days from now.",
+        "user": "CAD Scraper Pipeline"
       }
     ]
   },
@@ -2605,14 +2635,14 @@
     "street_address": "1317 SEBRIGHT DR",
     "situs_city": "Bryan",
     "situs_zip": "77802",
-    "stage": "rendering",
-    "status": "Rendering Filed",
+    "stage": "protest",
+    "status": "Appraisal Notice Issued",
     "prior_appraised_value": 44557,
     "prior_assessed_value": 44557,
-    "notice_date": null,
-    "protest_deadline": null,
-    "current_appraised_value": null,
-    "current_assessed_value": null,
+    "notice_date": "2026-07-11",
+    "protest_deadline": "2026-08-10",
+    "current_appraised_value": 242736,
+    "current_assessed_value": 242736,
     "tax_amount_due": null,
     "payment_status": null,
     "acres": 0.33,
@@ -2633,6 +2663,12 @@
         "event": "CAD Review",
         "description": "County Appraisal District acknowledged rendering receipt. Awaiting mid-year physical appraisal of construction progress.",
         "user": "System"
+      },
+      {
+        "date": "2026-07-11",
+        "event": "Appraisal Notice Harvested",
+        "description": "CAD Portal Scraper successfully parsed 2026 Notice of Appraised Value. Current Year Appraised Value: $242,736. Protest deadline set to 30 days from now.",
+        "user": "CAD Scraper Pipeline"
       }
     ]
   },
@@ -3310,14 +3346,14 @@
     "street_address": "286 CANYON CREEK",
     "situs_city": "Bryan",
     "situs_zip": "77802",
-    "stage": "rendering",
-    "status": "Rendering Filed",
+    "stage": "protest",
+    "status": "Appraisal Notice Issued",
     "prior_appraised_value": 54559,
     "prior_assessed_value": 54559,
-    "notice_date": null,
-    "protest_deadline": null,
-    "current_appraised_value": null,
-    "current_assessed_value": null,
+    "notice_date": "2026-07-11",
+    "protest_deadline": "2026-08-10",
+    "current_appraised_value": 200071,
+    "current_assessed_value": 200071,
     "tax_amount_due": null,
     "payment_status": null,
     "acres": 0.325,
@@ -3338,6 +3374,12 @@
         "event": "CAD Review",
         "description": "County Appraisal District acknowledged rendering receipt. Awaiting mid-year physical appraisal of construction progress.",
         "user": "System"
+      },
+      {
+        "date": "2026-07-11",
+        "event": "Appraisal Notice Harvested",
+        "description": "CAD Portal Scraper successfully parsed 2026 Notice of Appraised Value. Current Year Appraised Value: $200,071. Protest deadline set to 30 days from now.",
+        "user": "CAD Scraper Pipeline"
       }
     ]
   },
@@ -3868,14 +3910,14 @@
     "street_address": "2538 FALCON POINT DR",
     "situs_city": "Bryan",
     "situs_zip": "77802",
-    "stage": "rendering",
-    "status": "Rendering Filed",
+    "stage": "protest",
+    "status": "Appraisal Notice Issued",
     "prior_appraised_value": 38316,
     "prior_assessed_value": 38316,
-    "notice_date": null,
-    "protest_deadline": null,
-    "current_appraised_value": null,
-    "current_assessed_value": null,
+    "notice_date": "2026-07-11",
+    "protest_deadline": "2026-08-10",
+    "current_appraised_value": 292885,
+    "current_assessed_value": 292885,
     "tax_amount_due": null,
     "payment_status": null,
     "acres": 0.303,
@@ -3896,6 +3938,12 @@
         "event": "CAD Review",
         "description": "County Appraisal District acknowledged rendering receipt. Awaiting mid-year physical appraisal of construction progress.",
         "user": "System"
+      },
+      {
+        "date": "2026-07-11",
+        "event": "Appraisal Notice Harvested",
+        "description": "CAD Portal Scraper successfully parsed 2026 Notice of Appraised Value. Current Year Appraised Value: $292,885. Protest deadline set to 30 days from now.",
+        "user": "CAD Scraper Pipeline"
       }
     ]
   },
